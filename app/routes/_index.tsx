@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/cloudflare";
+import type { LoaderFunction, MetaFunction } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,7 +8,25 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+interface Env {
+  BUCKET: R2Bucket;
+}
+
+export const loader: LoaderFunction = async ({ params, context }) => {
+  const env = context.env as Env;
+
+  const obj = await env.BUCKET.get("nus3-voice.mp3");
+
+  if (obj === null) {
+    return new Response("Not found", { status: 404 });
+  }
+  return new Response(obj.body);
+};
+
 export default function Index() {
+  const audio = useLoaderData<typeof loader>();
+  console.log({ audio });
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>

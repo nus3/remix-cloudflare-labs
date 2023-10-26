@@ -1,0 +1,7 @@
+name = "remix-cloudflare-labs"
+compatibility_date = "2023-10-26"
+
+[[r2_buckets]]
+binding = 'BUCKET'
+bucket_name = 'nus3-remix-labs'
+preview_bucket_name = 'nus3-remix-labs-preview'
